@@ -1,0 +1,4 @@
+# configuration: (512,256,64) n=8 ensemble
+n_epochs = 100, ratio=3.05
+n_epochs = 150, ratio=1.41
+n_epochs = 200, ratio=1.23

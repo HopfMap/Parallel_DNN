@@ -45,7 +45,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 # Create ensemble with 3 networks
 input_dim = X_train.shape[1]  # Get input dimension from data
 ensemble = EnsembleNN(
-    n_models=3,
+    n_models=8,
     input_shape=(input_dim,),
     hidden_layers=[512, 256, 64],  # Larger architecture for this complex dataset
     output_shape=1
@@ -62,7 +62,7 @@ single_model = tf.keras.Sequential([
 single_model.compile(optimizer='adam', loss='mse')
 
 # Training parameters
-n_epochs = 420
+n_epochs = 200
 
 # Train both models
 print("\nTraining Ensemble:")
