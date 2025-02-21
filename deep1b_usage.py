@@ -4,6 +4,7 @@ import tensorflow_datasets as tfds
 from ensemble_nn import EnsembleNN
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 from sklearn.model_selection import train_test_split
+import time  # Add this at the top with other imports
 
 # Load the deep1b dataset
 dataset = tfds.load('deep1b', split='database', shuffle_files=False)
@@ -42,7 +43,7 @@ y = y.reshape(-1, 1)  # Reshape to 2D array
 # Split data into train and test sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Create ensemble with 3 networks
+# Create ensemble with n networks
 input_dim = X_train.shape[1]  # Get input dimension from data
 ensemble = EnsembleNN(
     n_models=8,
@@ -62,14 +63,26 @@ single_model = tf.keras.Sequential([
 single_model.compile(optimizer='adam', loss='mse')
 
 # Training parameters
-n_epochs = 200
+n_epochs = 380
 
 # Train both models
 print("\nTraining Ensemble:")
+ensemble_start = time.time()
 ensemble.fit(X_train, y_train, epochs=n_epochs, batch_size=32)
+ensemble_end = time.time()
+ensemble_training_time = ensemble_end - ensemble_start
 
 print("\nTraining Single Network:")
+single_start = time.time()
 single_model.fit(X_train, y_train, epochs=n_epochs, batch_size=32, verbose=1)
+single_end = time.time()
+single_training_time = single_end - single_start
+
+# Print training times
+print(f"\nTraining Time:")
+print(f"Ensemble: {ensemble_training_time:.2f} seconds")
+print(f"Single Network: {single_training_time:.2f} seconds")
+print(f"Time ratio (Ensemble/Single): {ensemble_training_time/single_training_time:.2f}")
 
 # Make predictions with both models
 ensemble_pred = ensemble.predict(X_test).numpy()
@@ -95,4 +108,5 @@ print(f"R² Score: {single_r2:.4f}")
 print(f"Mean Squared Error: {single_mse:.4f}")
 print(f"Mean Absolute Error: {single_mae:.4f}") 
 
-print("\nMSE ensemble/MSE single =",format(ensemble_mse/single_mse,".2f"))
+print("\n# epochs = {:}, MSE ensemble/MSE single = {:.2f}".format(n_epochs,
+                                                                  ensemble_mse/single_mse))

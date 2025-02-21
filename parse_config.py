@@ -73,8 +73,8 @@ def write_to_csv(config_data, output_filename):
         writer.writerows(rows)
 
 if __name__ == "__main__":
-    input_filename = "results_512_256_64_n_3.txt"
-    output_filename = "results.csv"
+    input_filename = "results_512_256_64_n_8.txt"
+    output_filename = "results_512_256_64_n_8.csv"
     
     try:
         # Read the configuration file
